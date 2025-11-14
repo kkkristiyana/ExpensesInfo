@@ -1,0 +1,71 @@
+﻿@using ExpensesInfo.Models;
+@model List<Expense>
+@{
+    ViewData["Title"] = "Expenses";
+}
+<div class="text-center">
+    <h1 class=" display-4">Expenses</h1>
+    </div>
+    <hr />
+    <form method="get" class="row mb-3">
+        <div class="col-md-4">
+            <select name="typeId" class="form-select">
+                <option value="">-- All types --</option>
+                @foreach (var t in (List<ExpenseType>)ViewBag.Types)
+                {
+                    if (ViewBag.SelectedTypeId != null && ViewBag.SelectedTypeId == t.Id)
+                    {
+                        <option value="@t.Id" selected="selected">@t.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@t.Id">@t.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-secondary w-100" type="submit">Filter</button>
+        </div>
+        <div class="col-md-6 text-end">
+            <a class="btn btn-success" asp-action="CreateEditExpense">Add expense</a>
+        </div>
+    </form>
+    <hr />
+    <h3>Total expenses: $@ViewBag.TotalExpenses</h3>
+    <hr />
+    <p>
+        <a class="btn btn-success" asp-action="CreateEditExpense">Add expense</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Value</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var expense in Model)
+                {
+                    <tr>
+                        <td>@expense.Id</td>
+                        <td>@expense.Value</td>
+                        <td>@expense.Description</td>
+                        <td>@expense.ExpenseType?.Name</td>
+                        <td>
+                            <a class="btn btn-primary" asp-action="CreateEditExpense" asp-route-id="@expense.Id">Edit</a>
+                            <a class="btn btn-danger" asp-action="DeleteExpense" asp-route-id="@expense.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+

@@ -1,0 +1,25 @@
+﻿@using ExpensesInfo.Models;
+@model ExpenseType
+
+@{
+    ViewData["Title"] = "Create / Edit Expense Type";
+}
+
+<h1>CreateEdit</h1>
+<h1>Create / Edit Expense Type</h1>
+
+<form asp-action="CreateEdit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary" type="submit">OK</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

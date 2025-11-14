@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering;
+@using ExpensesInfo.Models;
+@model Expense
+
+@{
+    ViewData["Title"] = "Create / Edit";
+}
+<div class="text-center">
+    <h1 class="display-4">Create or edit expense</h1>
+</div>
+<form asp-action="CreateEditExpenseForm" asp-controller="Home" method="post">
+    <input type="hidden" asp-for="Id"/>
+    <label class="mt-4">Value $</label>
+    <input type="number" class="form-control" step="0.01" asp-for="Value"/>
+    <span asp-validation-for="Value" class="text-danger"></span>
+
+    <label class="mt-4">Description</label>
+    <input type="text" class="form-control" asp-for="Description" />
+    <span asp-validation-for="Description" class="text-danger"></span>
+    <div class="mt-4">
+        <label asp-for="ExpenseTypeId" class="form-label"></label>
+        <select asp-for="ExpenseTypeId"
+                class="form-select"
+                asp-items="@(new SelectList(ViewBag.Types, "Id", "Name"))">
+            <option value="">-- Select expense type --</option>
+        </select>
+        <span asp-validation-for="ExpenseTypeId" class="text-danger"></span>
+    </div>
+    <button class="btn btn-primary mt-4" type="submit">0k</button>
+</form>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial"/>
+}
+
+
