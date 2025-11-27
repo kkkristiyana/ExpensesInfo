@@ -1,5 +1,7 @@
 ﻿using ExpensesInfo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace ExpensesInfo.Controllers
 {
@@ -12,20 +14,20 @@ namespace ExpensesInfo.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var types = _context.ExpenseTypes.ToList();
+            var types = await _context.ExpenseTypes.ToListAsync();
             return View(types);
         }
 
-        public IActionResult CreateEdit(int? id)
+        public async Task<IActionResult> CreateEdit(int? id)
         {
             if (id == null)
             {
                 return View(new ExpenseType());
             }
 
-            var type = _context.ExpenseTypes.SingleOrDefault(x => x.Id == id);
+            var type =await _context.ExpenseTypes.SingleOrDefaultAsync(x => x.Id == id);
             if (type == null) return NotFound();
 
             return View(type);
@@ -33,7 +35,7 @@ namespace ExpensesInfo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateEdit(ExpenseType model)
+        public async Task<IActionResult> CreateEdit(ExpenseType model)
         {
             if (!ModelState.IsValid)
             {
@@ -46,23 +48,23 @@ namespace ExpensesInfo.Controllers
             }
             else
             {
-                var existing = _context.ExpenseTypes.SingleOrDefault(x => x.Id == model.Id);
+                var existing =await _context.ExpenseTypes.SingleOrDefaultAsync(x => x.Id == model.Id);
                 if (existing == null) return NotFound();
 
                 existing.Name = model.Name;
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var type = _context.ExpenseTypes.SingleOrDefault(x => x.Id == id);
+            var type =await _context.ExpenseTypes.SingleOrDefaultAsync(x => x.Id == id);
             if (type == null) return NotFound();
 
             _context.ExpenseTypes.Remove(type);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }
