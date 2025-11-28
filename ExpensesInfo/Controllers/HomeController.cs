@@ -1,92 +1,68 @@
-using System.Diagnostics;
-using System.Threading.Tasks;
 using ExpensesInfo.Models;
+using ExpensesInfo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
-namespace ExpensesInfo.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly IExpenseService _expenses;
+
+    public HomeController(IExpenseService expenses)
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ExpensesInfoDbContext _context;
+        _expenses = expenses;
+    }
+    public async Task<IActionResult> Index()
+    {
+        return View();
+    }
+    public async Task<IActionResult> Expenses(int? typeId)
+    {
+        ViewBag.Types = await _expenses.GetAllTypesAsync();
+        ViewBag.SelectedTypeId = typeId;
 
-        public HomeController(ILogger<HomeController> logger, ExpensesInfoDbContext context)
-        {
-            _logger = logger;
-            _context = context;
-        }
+        var all = await _expenses.GetAllAsync(typeId); ViewBag.TotalExpenses = await _expenses.GetTotalAsync(typeId);
 
-        public async Task<IActionResult> Index()
-        {
-            return View();
-        }
+        return View(all);
+    }
 
-        public async Task<IActionResult> Expenses(int? typeId)
-        {
-            ViewBag.Types = await _context.ExpenseTypes.ToListAsync();
-            ViewBag.SelectedTypeId = typeId;
-            var query = _context.Expenses
-            .Include(e => e.ExpenseType)
-            .AsQueryable();
-            if (typeId.HasValue)
-            {
-                query = query.Where(e => e.ExpenseTypeId == typeId.Value);
-            }
-            var allExpenses = query.ToList();
-            ViewBag.TotalExpenses = allExpenses.Sum(e => e.Value);
+    public async Task<IActionResult> CreateEditExpense(int? id)
+    {
+        ViewBag.Types = await _expenses.GetAllTypesAsync();
 
-            return View(allExpenses);
-        }
-        public async Task<IActionResult> CreateEditExpense(int? id)
+        if (id == null) return View(new Expense());
+
+        var model = await _expenses.GetByIdAsync(id.Value); if (model == null) return NotFound();
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateEditExpenseForm(Expense model)
+    {
+        if (!ModelState.IsValid)
         {
-            ViewBag.Types = await _context.ExpenseTypes.ToListAsync();
-            if (id == null)
-            {
-                return View(new Expense());
-            }
-            var expense =await _context.Expenses.SingleOrDefaultAsync(e => e.Id == id);
-            if (expense == null) return NotFound();
-            return View(expense);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateEditExpenseForm(Expense model)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Types =await _context.ExpenseTypes.ToListAsync();
-                return View("CreateEditExpense", model);
-            }
-            if (model.Id == 0)
-            {
-                
-                _context.Expenses.Add(model);
-            }
-            else
-            {
-                var existing =await _context.Expenses.SingleOrDefaultAsync(x=>x.Id == model.Id);
-                if (existing == null) return NotFound();
-                existing.Value=model.Value;
-                existing.Description = model.Description;
-                existing.ExpenseTypeId= model.ExpenseTypeId;
-            }
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Expenses));
-        }
-        public async Task<IActionResult> DeleteExpense(int id)
-        {
-            var expense =await _context.Expenses.SingleOrDefaultAsync(expense => expense.Id == id);
-            if (expense == null) return NotFound();
-            _context.Expenses.Remove(expense);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Expenses));
+            ViewBag.Types = await _expenses.GetAllTypesAsync(); return View("CreateEditExpense", model);
         }
 
-            [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        else
+        {
+            await _expenses.UpdateAsync(model);
+        }
+
+        return RedirectToAction(nameof(Expenses));
+    }
+
+    public async Task<IActionResult> DeleteExpense(int id)
+    {
+        await _expenses.DeleteAsync(id); return RedirectToAction(nameof(Expenses));
+    }
+
+[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
-}
+

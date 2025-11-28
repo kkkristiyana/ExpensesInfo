@@ -2,70 +2,43 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using ExpensesInfo.Services;
 
-namespace ExpensesInfo.Controllers
+public class ExpenseTypesController : Controller
 {
-    public class ExpenseTypesController : Controller
+    private readonly IExpenseTypeService _types;
+
+    public ExpenseTypesController(IExpenseTypeService types)
     {
-        private readonly ExpensesInfoDbContext _context;
+        _types = types;
+    }
 
-        public ExpenseTypesController(ExpensesInfoDbContext context)
-        {
-            _context = context;
-        }
+    public async Task<IActionResult> Index()
+    {
+        var list = await _types.GetAllAsync(); return View(list);
+    }
 
-        public async Task<IActionResult> Index()
-        {
-            var types = await _context.ExpenseTypes.ToListAsync();
-            return View(types);
-        }
+    public async Task<IActionResult> CreateEdit(int? id)
+    {
+        if (id == null) return View(new ExpenseType());
 
-        public async Task<IActionResult> CreateEdit(int? id)
-        {
-            if (id == null)
-            {
-                return View(new ExpenseType());
-            }
+        var model = await _types.GetByIdAsync(id.Value); if (model == null) return NotFound();
 
-            var type =await _context.ExpenseTypes.SingleOrDefaultAsync(x => x.Id == id);
-            if (type == null) return NotFound();
+        return View(model);
+    }
 
-            return View(type);
-        }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateEdit(ExpenseType model)
+    {
+        if (!ModelState.IsValid) return View(model); if (model.Id == 0) await _types.CreateAsync(model); else await _types.UpdateAsync(model);
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateEdit(ExpenseType model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+        return RedirectToAction(nameof(Index));
+    }
 
-            if (model.Id == 0)
-            {
-                _context.ExpenseTypes.Add(model);
-            }
-            else
-            {
-                var existing =await _context.ExpenseTypes.SingleOrDefaultAsync(x => x.Id == model.Id);
-                if (existing == null) return NotFound();
-
-                existing.Name = model.Name;
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> Delete(int id)
-        {
-            var type =await _context.ExpenseTypes.SingleOrDefaultAsync(x => x.Id == id);
-            if (type == null) return NotFound();
-
-            _context.ExpenseTypes.Remove(type);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _types.DeleteAsync(id); return RedirectToAction(nameof(Index));
     }
 }
+
