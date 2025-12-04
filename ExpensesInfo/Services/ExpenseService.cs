@@ -34,7 +34,6 @@ namespace ExpensesInfo.Services
             if (existing == null) return;
             existing.Value = expense.Value;
             existing.Description = expense.Description;
-            existing.Date = expense.Date;
             existing.ExpenseTypeId = expense.ExpenseTypeId;
             await _context.SaveChangesAsync();
         }

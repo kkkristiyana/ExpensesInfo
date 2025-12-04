@@ -33,7 +33,7 @@ DbFactory.CreateInMemory(nameof(GetAllAsync_Should_Filter_By_Type)); var typeFoo
             using var db =
 DbFactory.CreateInMemory(nameof(CreateAsync_Should_Add_Expense)); var svc = new ExpenseService(db);
 
-            var e = new Expense { Value = 15, ExpenseTypeId = 1 }; await svc.CreateAsync(e);
+            var e = new Expense { Value = 15, ExpenseTypeId = 1, Description="e" }; await svc.CreateAsync(e);
 
             var count = await db.Expenses.CountAsync(); count.Should().Be(1);
         }
@@ -43,7 +43,7 @@ DbFactory.CreateInMemory(nameof(CreateAsync_Should_Add_Expense)); var svc = new 
         {
             using var db =
 DbFactory.CreateInMemory(nameof(UpdateAsync_Should_Modify_Fields));
-            var e = new Expense { Value = 5,  ExpenseTypeId = 1 }; db.Expenses.Add(e); await db.SaveChangesAsync();
+            var e = new Expense { Value = 5, ExpenseTypeId = 1 , Description = "e" }; db.Expenses.Add(e); await db.SaveChangesAsync();
 
             var svc = new ExpenseService(db);
             e.Value = 99;
@@ -57,7 +57,7 @@ DbFactory.CreateInMemory(nameof(UpdateAsync_Should_Modify_Fields));
         {
             using var db =
 DbFactory.CreateInMemory(nameof(DeleteAsync_Should_Remove_Expense));
-            var e = new Expense { Value = 7, ExpenseTypeId = 1 }; db.Expenses.Add(e); await db.SaveChangesAsync();
+            var e = new Expense { Value = 7, ExpenseTypeId = 1 , Description = "e" }; db.Expenses.Add(e); await db.SaveChangesAsync();
 
             var svc = new ExpenseService(db); await svc.DeleteAsync(e.Id);
 

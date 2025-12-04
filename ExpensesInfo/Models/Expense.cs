@@ -12,7 +12,6 @@ namespace ExpensesInfo.Models
         [Display(Name ="Expense Type")]
         [Required]
         public int ExpenseTypeId {  get; set; }
-        public DateTime Date { get; set; }
         public ExpenseType? ExpenseType { get; set; }
     }
 }

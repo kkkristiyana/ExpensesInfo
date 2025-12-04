@@ -43,7 +43,7 @@ namespace ExpensesInfo.Tests.Controllers
         {
             var mockSvc = new Mock<IExpenseService>(); var controller = new HomeController(mockSvc.Object);
 
-            var model = new Expense { Value = 10, Date = DateTime.Today, ExpenseTypeId = 1 };
+            var model = new Expense { Value = 10, ExpenseTypeId = 1 };
             var result = await controller.CreateEditExpenseForm(model) as RedirectToActionResult;
 
             Assert.NotNull(result);
