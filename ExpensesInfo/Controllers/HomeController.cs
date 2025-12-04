@@ -43,9 +43,13 @@ public class HomeController : Controller
     {
         if (!ModelState.IsValid)
         {
-            ViewBag.Types = await _expenses.GetAllTypesAsync(); return View("CreateEditExpense", model);
+            ViewBag.Types = await _expenses.GetAllTypesAsync();
+            return View("CreateEditExpense", model);
         }
-
+        if (model.Id==0)
+        {
+            await _expenses.CreateAsync(model);
+        }
         else
         {
             await _expenses.UpdateAsync(model);

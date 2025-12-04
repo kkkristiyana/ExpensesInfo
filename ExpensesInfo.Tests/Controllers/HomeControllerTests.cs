@@ -41,9 +41,15 @@ namespace ExpensesInfo.Tests.Controllers
         public async Task
         CreateEditExpenseForm_Valid_New_Should_Redirect_And_Call_Create()
         {
-            var mockSvc = new Mock<IExpenseService>(); var controller = new HomeController(mockSvc.Object);
+            var mockSvc = new Mock<IExpenseService>();
+            var controller = new HomeController(mockSvc.Object);
 
-            var model = new Expense { Value = 10, ExpenseTypeId = 1 };
+            var model = new Expense 
+            { 
+                Value = 10, 
+                ExpenseTypeId = 1 , 
+                //Description = "e" 
+            };
             var result = await controller.CreateEditExpenseForm(model) as RedirectToActionResult;
 
             Assert.NotNull(result);
