@@ -17,8 +17,8 @@ namespace ExpensesInfo.Tests.Services
         {
             using var db =
 DbFactory.CreateInMemory(nameof(GetAllAsync_Should_Filter_By_Type)); var typeFood = new ExpenseType { Name = "Food" }; var typeFuel = new ExpenseType { Name = "Fuel" }; db.ExpenseTypes.AddRange(typeFood, typeFuel); db.Expenses.AddRange(
-                new Expense { Value = 10, ExpenseType = typeFood, Date = DateTime.Today },
-                new Expense { Value = 20, ExpenseType = typeFuel, Date = DateTime.Today }); await db.SaveChangesAsync();
+                new Expense { Value = 10, ExpenseType = typeFood },
+                new Expense { Value = 20, ExpenseType = typeFuel }); await db.SaveChangesAsync();
 
             var svc = new ExpenseService(db);
 
@@ -43,7 +43,7 @@ DbFactory.CreateInMemory(nameof(CreateAsync_Should_Add_Expense)); var svc = new 
         {
             using var db =
 DbFactory.CreateInMemory(nameof(UpdateAsync_Should_Modify_Fields));
-            var e = new Expense { Value = 5, Date = DateTime.Today, ExpenseTypeId = 1 }; db.Expenses.Add(e); await db.SaveChangesAsync();
+            var e = new Expense { Value = 5,  ExpenseTypeId = 1 }; db.Expenses.Add(e); await db.SaveChangesAsync();
 
             var svc = new ExpenseService(db);
             e.Value = 99;
@@ -57,7 +57,7 @@ DbFactory.CreateInMemory(nameof(UpdateAsync_Should_Modify_Fields));
         {
             using var db =
 DbFactory.CreateInMemory(nameof(DeleteAsync_Should_Remove_Expense));
-            var e = new Expense { Value = 7, Date = DateTime.Today, ExpenseTypeId = 1 }; db.Expenses.Add(e); await db.SaveChangesAsync();
+            var e = new Expense { Value = 7, ExpenseTypeId = 1 }; db.Expenses.Add(e); await db.SaveChangesAsync();
 
             var svc = new ExpenseService(db); await svc.DeleteAsync(e.Id);
 
@@ -69,9 +69,9 @@ DbFactory.CreateInMemory(nameof(DeleteAsync_Should_Remove_Expense));
         {
             using var db =
 DbFactory.CreateInMemory(nameof(GetTotalAsync_Should_Sum_Filtered)); var t1 = new ExpenseType { Name = "A" }; var t2 = new ExpenseType { Name = "B" }; db.ExpenseTypes.AddRange(t1, t2); db.Expenses.AddRange(
-                new Expense { Value = 10, ExpenseType = t1, Date = DateTime.Today },
-                new Expense { Value = 5, ExpenseType = t1, Date = DateTime.Today },
-                new Expense { Value = 2, ExpenseType = t2, Date = DateTime.Today }); await db.SaveChangesAsync();
+                new Expense { Value = 10, ExpenseType = t1 },
+                new Expense { Value = 5, ExpenseType = t1 },
+                new Expense { Value = 2, ExpenseType = t2 }); await db.SaveChangesAsync();
 
             var svc = new ExpenseService(db); var sumT1 = await svc.GetTotalAsync(t1.Id);
 
