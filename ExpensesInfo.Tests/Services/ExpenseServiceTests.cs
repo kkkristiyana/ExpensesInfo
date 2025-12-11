@@ -16,7 +16,7 @@ namespace ExpensesInfo.Tests.Services
         public async Task GetAllAsync_Should_Filter_By_Type()
         {
             using var db =
-DbFactory.CreateInMemory(nameof(GetAllAsync_Should_Filter_By_Type)); var typeFood = new ExpenseType { Name = "Food" }; var typeFuel = new ExpenseType { Name = "Fuel" }; db.ExpenseTypes.AddRange(typeFood, typeFuel); db.Expenses.AddRange(
+                DbFactory.CreateInMemory(nameof(GetAllAsync_Should_Filter_By_Type)); var typeFood = new ExpenseType { Name = "Food" }; var typeFuel = new ExpenseType { Name = "Fuel" }; db.ExpenseTypes.AddRange(typeFood, typeFuel); db.Expenses.AddRange(
                 new Expense { Value = 10, ExpenseType = typeFood, Description = "e" },
                 new Expense { Value = 20, ExpenseType = typeFuel , Description = "e" }); await db.SaveChangesAsync();
 
@@ -77,6 +77,7 @@ DbFactory.CreateInMemory(nameof(GetTotalAsync_Should_Sum_Filtered)); var t1 = ne
 
             sumT1.Should().Be(15);
         }
+        
     }
 }
 

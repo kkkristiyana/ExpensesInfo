@@ -37,5 +37,6 @@ namespace ExpensesInfo.Services
             _context.ExpenseTypes.Remove(existing);
             await _context.SaveChangesAsync();
         }
+        
     }
 }

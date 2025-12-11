@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ExpensesInfo.Models;
+﻿using ExpensesInfo.Models;
 using ExpensesInfo.Services;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ExpensesInfo.Tests.Controllers
@@ -55,6 +56,35 @@ namespace ExpensesInfo.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal(nameof(HomeController.Expenses), result.ActionName);
             mockSvc.Verify(s => s.CreateAsync(It.IsAny<Expense>()), Times.Once);
+        }
+        //dopulnitelni zadachi 2)
+        [Fact]
+        public async Task Expenses_Should_Pass_TypeId_To_Service_And_Return_Filtered_Model()
+        {
+            // arrange
+            var mockSvc = new Mock<IExpenseService>();
+
+            mockSvc.Setup(s => s.GetAllAsync(5))
+                .ReturnsAsync(new List<Expense>
+                {
+                    new Expense { Value = 10, ExpenseTypeId = 5 },
+                    new Expense { Value = 20, ExpenseTypeId = 5 }
+                });
+
+            var controller = new HomeController(mockSvc.Object);
+
+            // act
+            var result = await controller.Expenses(5);
+
+            // assert
+            mockSvc.Verify(s => s.GetAllAsync(5), Times.Once);
+
+            var view = result as ViewResult;
+            view.Should().NotBeNull();
+
+            var model = view!.Model as List<Expense>;
+            model.Should().HaveCount(2);
+            model![0].ExpenseTypeId.Should().Be(5);
         }
     }
 }

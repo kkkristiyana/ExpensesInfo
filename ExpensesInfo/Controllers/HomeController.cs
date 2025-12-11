@@ -21,7 +21,8 @@ public class HomeController : Controller
         ViewBag.Types = await _expenses.GetAllTypesAsync();
         ViewBag.SelectedTypeId = typeId;
 
-        var all = await _expenses.GetAllAsync(typeId); ViewBag.TotalExpenses = await _expenses.GetTotalAsync(typeId);
+        var all = await _expenses.GetAllAsync(typeId); 
+        ViewBag.TotalExpenses = await _expenses.GetTotalAsync(typeId);
 
         return View(all);
     }

@@ -9,12 +9,15 @@ namespace ExpensesInfo.Services
         context;
         public async Task<List<Expense>> GetAllAsync(int? typeId)
         {
-            var query = _context.Expenses.Include(e =>
-            e.ExpenseType).AsQueryable();
+            var query = _context.Expenses
+                .Include(e => e.ExpenseType)
+                .AsQueryable();
+
             if (typeId.HasValue)
             {
+                query = query.Where(e => e.ExpenseTypeId == typeId.Value);
             }
-            query = query.Where(e => e.ExpenseTypeId == typeId.Value);
+
             return await query.ToListAsync();
         }
         public async Task<Expense?> GetByIdAsync(int id)
