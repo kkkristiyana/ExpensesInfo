@@ -6,8 +6,12 @@
     }
 
     let result; switch (operation) {
-        case 'add': result = num1 + num2; break; case 'subtract': result = num1 - num2; break; case 'multiply': result = num1 * num2; break;
-        case 'divide': result = num2 === 0 ? 'Cannot divide by zero' : (num1 / num2); break; default: result = 'Invalid operation';
+        case 'add': result = num1 + num2; break;
+        case 'subtract': result = num1 - num2; break;
+        case 'multiply': result = num1 * num2; break;
+        case 'divide': result = num2 === 0 ? 'Cannot divide by zero' : (num1 / num2); break; 
+        case 'power': result = Math.pow(num1,num2); break;
+        default: result = 'Invalid operation';
     }
 
     showResult('Result: ' + result);
