@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "JS Playground";
+}
+<div class="container mt-4">
+    <h2 class="mb-3">JS Playground</h2>
+
+    <!-- Тук поставяйте задачите (HTML бутон/полета) -->
+    <!--1va zadacha-->
+    <button onclick="alert('Hello from JS!')">Say hello</button>
+    <!--2ra zadacha-->
+    <p id="msg">Original text</p>
+    <button onclick="document.getElementById('msg').innerHTML='Changed!'">Change</button>
+    <!--3ta zadacha-->
+    <p id="colorText">Make me red</p>
+    <button onclick="document.getElementById('colorText').style.color='red'">Red</button>
+    <!--4ta zadacha-->
+    <div id="box" style="display:none;border:1px solid #ccc;padding:8px;">I am a box</div>
+    <button onclick="   const b=document.getElementById('box'); b.style.display = (b.style.display==='none') ? 'block' : 'none';">Show/Hide</button>
+    <!--5ta zadacha-->
+    <input id="nameBox" placeholder="Your name" />
+    <button onclick="   const n=document.getElementById('nameBox').value; alert('Hello, ' + n + '!');">Greet</button>
+    <!--6ta zadacha-->
+    <input id="a" type="number" placeholder="A"> <input id="b" type="number" placeholder="B">
+    <button onclick="   const x=parseFloat(document.getElementById('a').value)||0;   const y=parseFloat(document.getElementById('b').value)||0; alert('Sum = ' + (x+y));">Add</button>
+    <!--7ma zadacha-->
+    <input id="desc" placeholder="Description" oninput="   document.getElementById('submitBtn').disabled = this.value.trim()===''; ">
+    <button id="submitBtn" disabled>Submit</button>
+    <!--8ma zadacha-->
+    <img id="pic" src="/images/logo1.webp" style="width:120px" onmouseover="this.src='/images/logo2.webp'" onmouseout="this.src='/images/logo1.webp'">
+    <!--9ma zadacha-->
+    <p id="todayOut"></p> 
+    <button onclick="   document.getElementById('todayOut').innerHTML=new Date().toLocaleString(); ">What time is it?</button>
+
+</div>
+
+@section Scripts {
+    <script>
+
+        // Тук поставяйте JavaScript за задачите, ако има такъв
+    </script>
+}
