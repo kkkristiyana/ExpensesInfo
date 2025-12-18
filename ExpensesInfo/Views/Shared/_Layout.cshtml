@@ -17,6 +17,10 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <!-- Right-aligned button -->
+                <div class="d-flex ms-auto">
+                    <button id="darkModeToggle" class="btn btn-secondary">Dark/Light</button>
+                </div>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -58,3 +62,24 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("darkModeToggle");
+        const body = document.body;
+
+        // Възстановяване на настройката от localStorage
+        if (localStorage.getItem("darkMode") === "enabled") {
+            body.classList.add("dark");
+        }
+
+        toggleBtn.addEventListener("click", function () {
+            body.classList.toggle("dark");
+
+            if (body.classList.contains("dark")) {
+                localStorage.setItem("darkMode", "enabled");
+            } else {
+                localStorage.setItem("darkMode", "disabled");
+            }
+        });
+    });
+</script>

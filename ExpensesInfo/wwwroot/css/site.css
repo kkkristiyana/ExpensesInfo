@@ -20,3 +20,63 @@ html {
 body {
   margin-bottom: 60px;
 }
+.high-expense {
+    background-color: #ffe6e6;
+}
+body.dark {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+    body.dark a {
+        color: #bb86fc;
+    }
+
+    body.dark .table {
+        color: #f1f1f1;
+        background-color: #1e1e1e;
+    }
+
+    body.dark .btn {
+        background-color: #333;
+        color: #f1f1f1;
+    }
+#darkModeToggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000; /* ensure it’s on top of other elements */
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+    .tooltip .header-text {
+        display: inline-block; /* гарантира, че текстът остава видим */
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 180px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 5px 8px;
+        border-radius: 4px;
+        /* позиция на tooltip-а */
+        position: absolute;
+        z-index: 1000;
+        bottom: 125%; /* над елемента */
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none; /* не пречи на hover */
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }

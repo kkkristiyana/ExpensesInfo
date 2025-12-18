@@ -11,9 +11,15 @@
 <form asp-action="CreateEditExpenseForm" asp-controller="Home" method="post">
     <input type="hidden" asp-for="Id"/>
     <label class="mt-4">Value $</label>
-    <input type="number" class="form-control" step="0.01" asp-for="Value"/>
+    <input type="number" class="form-control" step="0.01" asp-for="Value" />
     <span asp-validation-for="Value" class="text-danger"></span>
 
+    <div id="largeExpenseWarning"
+         class="text-warning mt-2"
+         style="display:none;">
+        ⚠ Голям разход – сигурен ли си?
+    </div>
+    
     <label class="mt-4">Description</label>
     <input type="text" class="form-control" asp-for="Description" />
     <span asp-validation-for="Description" class="text-danger"></span>
@@ -26,10 +32,73 @@
         </select>
         <span asp-validation-for="ExpenseTypeId" class="text-danger"></span>
     </div>
-    <button class="btn btn-primary mt-4" type="submit">0k</button>
+    <div class="mt-4">
+        <button class="btn btn-primary" type="submit">OK</button>
+
+        <button type="button"
+                class="btn btn-secondary ms-2"
+                id="resetFormBtn">
+            Изчисти формата
+        </button>
+    </div>
 </form>
+
 @section Scripts{
     <partial name="_ValidationScriptsPartial"/>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const valueInput = document.getElementById("Value");
+
+            valueInput.addEventListener("blur", function () {
+                if (this.value !== "") {
+                    let number = parseFloat(this.value);
+
+                    if (!isNaN(number)) {
+                        this.value = number.toFixed(2);
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const valueInput = document.getElementById("Value");
+            const warningDiv = document.getElementById("largeExpenseWarning");
+
+            function checkLargeExpense() {
+                const value = parseFloat(valueInput.value);
+
+                if (!isNaN(value) && value > 200) {
+                    warningDiv.style.display = "block";
+                } else {
+                    warningDiv.style.display = "none";
+                }
+            }
+
+            // при писане
+            valueInput.addEventListener("input", checkLargeExpense);
+
+            // при излизане от полето
+            valueInput.addEventListener("blur", checkLargeExpense);
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const resetBtn = document.getElementById("resetFormBtn");
+
+            resetBtn.addEventListener("click", function () {
+                form.reset();
+
+                // ако имаш warning за голям разход – скриваме го
+                const warningDiv = document.getElementById("largeExpenseWarning");
+                if (warningDiv) {
+                    warningDiv.style.display = "none";
+                }
+            });
+        });
+    </script>
+    
 }
 
 
